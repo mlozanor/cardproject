@@ -333,22 +333,37 @@ What it does:
 
 ## 12. Layout
 ```
-cardrec/
-  config.py         settings (sets, sizes, CARDREC_DATA, art box)   manifest.py   load card lists (+ Japanese for the app)
-  database.py       download cards + manifest            art_groups.py   same-artwork groups (pHash)
-  database_ja.py    Japanese Battle Partners cards (app only)
-  rectify.py        find card(s), refine outline, warp    synth.py        synthetic scenes with ground truth
-  make_queries.py   single-card synthetic queries          scenes.py       multi-card scenes + detection eval
-  evaluate.py       metrics, CIs, per-query logs           experiments.py  all synthetic experiments
-  failure_analysis.py  causes of failures                  report_figures.py  figures (PNG)
-  real_photos.py    labelling + evaluation of real photos  demo_offline.py smoke test without data
-  language.py       OCR language rules                     lang_data.py    language test data + eval
-  condition.py      condition estimate                     condition_eval.py  synthetic validation
-  methods/          base (interface), sift (+orb), embedding (+pixel), cnn, clip_method, hybrid, cache
-  app/              CardDex: server.py, engine.py, db.py, prices.py, static/index.html
-results/            main/, ksweep/, norectify/, scenes/, language*/, condition/, app/, failures/, summary_*.csv
-PRESENTATION_GUIDE.md   what each file does, presentation order, likely questions
-run_app.bat         start CardDex with the venv
+cardproject/
+  README.md             this file
+  PRESENTATION_GUIDE.md what each file does, presentation order, likely questions
+  requirements.txt      pinned core packages
+  run_app.bat           start CardDex with the venv
+  .vscode/              VS Code settings (uses the venv Python)
+  app images/           screenshots of the CardDex app
+  data/                 fallback data folder (only used if CARDREC_DATA is not set; demo data)
+  results/              all experiment logs, summary tables and figures
+  cardrec/              all the code
+    config.py           settings (sets, sizes, CARDREC_DATA, art box)
+    manifest.py         load card lists (+ Japanese for the app)
+    database.py         download English cards + manifest
+    database_ja.py      Japanese Battle Partners cards (app only)
+    art_groups.py       same-artwork groups (pHash)
+    rectify.py          find card(s), refine outline, warp
+    synth.py            synthetic scenes with ground truth
+    make_queries.py     single-card synthetic queries
+    scenes.py           multi-card scenes + detection eval
+    evaluate.py         metrics, CIs, per-query logs
+    experiments.py      all synthetic experiments
+    failure_analysis.py causes of failures
+    report_figures.py   figures (PNG)
+    real_photos.py      labelling + evaluation of real photos
+    demo_offline.py     smoke test without data
+    language.py         OCR language rules
+    lang_data.py        language test data + eval
+    condition.py        condition estimate
+    condition_eval.py   synthetic validation of the condition estimate
+    methods/            the retrieval methods (pixel, SIFT/ORB, ResNet, CLIP, hybrid) and the index cache
+    app/                the CardDex web app (server, analysis engine, collection database, prices, interface)
 ```
 
 ## 13. Credits and citations
