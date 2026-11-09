@@ -1,0 +1,20 @@
+\begin{table}[htbp]\centering\small
+\caption[Condition estimate validation]{Validation of the visual condition estimate on 80 test cards with synthetic damage of known strength (front side only). $\rho$ = Spearman rank correlation between true damage strength and the estimate.}\label{tab:condition}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Measure & Result\\
+\midrule
+Cards rectified / reference aligned & 80 / 76\\
+Centering error L/R, median / 90th pct.\ (percentage points) & 0.58 / 2.33\\
+Centering error T/B, median / 90th pct.\ (percentage points) & 0.70 / 2.33\\
+$\rho$ corner cut vs.\ fill sub-score (expect $<0$) & -0.74\\
+$\rho$ corner whitening vs.\ whitening sub-score & +0.62\\
+$\rho$ edge whitening vs.\ whitening sub-score & +0.78\\
+$\rho$ edge fray vs.\ fray sub-score & +0.41\\
+Surface defects: recall / precision & 68/111 = 0.61 / 72/105 = 0.69\\
+Surface defects with correct type & 59/111\\
+$\rho$ part score vs.\ true damage: corners / edges / surface / centering & -0.53 / -0.32 / -0.86 / -0.90\\
+$\rho$ overall score vs.\ total damage & -0.46\\
+\bottomrule
+\end{tabular}
+\end{table}

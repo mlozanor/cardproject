@@ -1,0 +1,60 @@
+\chapter{Dataset and Experimental Setup}
+\label{ch:data}
+
+%-------------------------------------------------------
+
+\section{Reference database}
+
+The reference database contains one official scan per card for \res{db-sets} recent sets of the Pok\'emon Trading Card Game (Table~\ref{tab:dataset}): \res{db-cards} unique card ids in total, of which \res{db-pokemon} are Pok\'emon cards, \res{db-trainer} Trainer cards and \res{db-energy} Energy cards. The counts include the secret rares, which are numbered above the printed set size. Card lists, metadata and images come from the Pok\'emon TCG API; illustrator names missing in that source and the Spanish and Japanese scans used in the language test come from TCGdex. The download script (\texttt{cardrec/database.py}) writes a manifest with one row per card (id, name, set, number, supertype, subtypes, types, rarity, regulation mark, illustrator, image path, artwork group).
+
+\input{generated/tab_dataset}
+
+\section{Reprints and near-duplicates}
+\label{sec:reprints}
+
+Two kinds of near-duplicates are handled differently.
+
+\paragraph{Identical artwork (reprints).} Some cards are reprinted in a later set with exactly the same artwork; only the small set symbol, set code and collector number differ. Such pairs are grouped automatically (\texttt{cardrec/art\_groups.py}) with a 64-bit perceptual hash: the grey card is resized to $32\times32$, transformed with the discrete cosine transform, and the $8\times8$ lowest-frequency coefficients are thresholded at their median, giving one bit each. Two cards are considered the same artwork if \emph{both} the hash of the whole card and the hash of the artwork window differ in at most 6 bits (Hamming distance). Groups are then formed transitively with union--find. This produced \res{db-art-pairs} same-artwork pairs, all between \emph{Ascended Heroes} and an older set (\res{db-art-pairs-sv8pt5-me2pt5} with \emph{Prismatic Evolutions} and \res{db-art-pairs-sv9-me2pt5} with \emph{Journey Together}), so the \res{db-cards} cards contain \res{db-artgroups} distinct artworks. The largest distances inside accepted pairs were \res{db-art-maxfull} bits (whole card) and \res{db-art-maxart} bits (artwork window). All pairs were checked by eye on a generated contact sheet.
+
+\paragraph{Lookalikes.} Cards with the same name but different artwork (for example the \res{db-max-name-n} versions of \emph{\res{db-max-name}}, or a regular card and its illustration rare) are \emph{not} grouped: they are different cards that a correct system must tell apart. The database has \res{db-dup-names} names that occur on more than one card (\res{db-dup-name-cards} cards).
+
+\paragraph{Metrics that follow from this.} Every query is scored twice:
+\begin{itemize}
+  \item \textbf{strict}: correct only if the predicted id is exactly the true id;
+  \item \textbf{lenient}: correct if the predicted card is in the same artwork group as the true card (a reprint counts as correct).
+\end{itemize}
+The difference between the two metrics measures exactly how many errors are reprint confusions.
+
+\section{Synthetic test queries}
+\label{sec:synthetic}
+
+Real labelled photos of all \res{db-cards} cards do not exist, so the main experiments use synthetic photos with exact ground truth (\texttt{cardrec/synth.py}). A reference scan is placed on a $1280\times960$ background (a random smooth colour field plus noise) with a random position, in-plane rotation and a random perturbation of its four corners (perspective). The whole image then receives a lighting gradient with a gamma change, a glare blob centred on the card, Gaussian or motion blur, and Gaussian noise, and is saved as JPEG (quality 92). The strength of each distortion is set by a severity level from 1 to 5 (Table~\ref{tab:severity}); at severity 5 the rotation covers the full circle. The true corner positions are stored with each query, so the accuracy of the detector can be measured as well.
+
+\input{generated/tab_severity}
+
+For each severity, \res{main-n-queries} different cards are drawn at random without replacement (fixed seed), so each test set covers about a quarter of the database. Note that the cards differ between severities, so a comparison across severities also involves different cards. Separate development query sets with other seeds were used to tune the detector; the test queries were never used for tuning.
+
+\section{Cross-language test set}
+\label{sec:langdata}
+
+To test printed languages, a separate set was built from official scans (\texttt{cardrec/lang\_data.py}) with two disjoint splits, a development split for tuning the language rules and a test split for the reported numbers. The test split has 60 English cards from the database, 60 Spanish cards (same card ids as their English versions) and 60 Japanese cards from the two Japanese sets that correspond to \emph{Prismatic Evolutions} and \emph{Journey Together}. Japanese numbering differs, so the matching English card was found \emph{without} the tested methods: same illustrator and same Pok\'edex number, then the closest artwork hash, accepted only up to a distance of 14 bits. This gave an English ground truth for \res{lang-ja-n} of the 60 Japanese cards; all matches were checked by eye, and the remaining Japanese cards are used only for language classification. Synthetic photos were rendered at severity 2 at two resolutions: the standard canvas (card about 530 pixels tall, ``low'') and a $2560\times1920$ canvas (card about 1050 pixels tall, similar to a 12-megapixel phone photo, ``phone'').
+
+\section{Condition validation set}
+
+The condition estimate was tuned on \res{cond-dev-n} development cards and is validated on \res{cond-n} test cards drawn with a different random seed (the two samples were not forced to be disjoint: \res{cond-dev-overlap} cards appear in both, with different random damage). Each official scan is damaged with known strengths in $\{0, 0.25, 0.5, 0.75, 1\}$: corner whitening, corner cuts, edge whitening, edge fraying, scratches and stains at known positions, and a shift of the print of up to about 1\,mm (centering). The damaged card is rendered as a phone-resolution photo at severity 1 and analysed exactly like a real photo. Only the front side can be validated, because no official scans of the card back exist.
+
+\section{Metrics}
+
+\begin{itemize}
+  \item \textbf{Top-1 / top-5}: fraction of queries whose correct card is ranked first / among the first five.
+  \item \textbf{MRR}: mean reciprocal rank $\frac{1}{N}\sum_i 1/\text{rank}_i$. With exactly one relevant card per query, mean average precision equals the MRR.
+  \item \textbf{95\% confidence intervals}: percentile bootstrap \citep{efron1979bootstrap} over the queries, 1000 resamples.
+  \item \textbf{Outline accuracy}: IoU between the detected and the true card polygons; a rectification counts as correct if IoU $\geq 0.8$, and as a localisation failure if IoU $< 0.5$.
+  \item \textbf{Latency}: median time per photo for rectification plus retrieval. The experiments ran on a laptop that was running other jobs (including other experiments) at the same time, so the latencies indicate orders of magnitude, not exact times; accuracy is not affected.
+\end{itemize}
+Every query of every run is logged (predicted id, rank of the true card, outline IoU, timings), and all tables and figures of this report are regenerated from these logs by a script (\texttt{report/make\_figures.py}).
+
+\section{Real photos}
+\label{sec:realphotos}
+
+A protocol and labelling tools for real phone photos are ready (\texttt{cardrec/real\_photos.py}): 70--100 photos per set of physically owned cards, with deliberately varied backgrounds, lighting, glare, sleeves, rotation, and 20--30 photos with several cards; the ground truth must be entered by hand and not taken from any tested method. This systematic set was not collected within the project. The real photos used in this report are the \res{app-reid-n} photos that were saved with the identified cards in the application (Section~\ref{sec:res-app}); for these, the ground truth is the card that the author confirmed in the application before saving.

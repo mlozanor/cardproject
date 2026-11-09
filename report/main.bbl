@@ -1,0 +1,174 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{}{Babenko
+  et~al.\@}{2014}]{babenko2014neuralcodes}
+Babenko, A., Slesarev, A., Chigorin, A., and Lempitsky, V. 2014.
+\newblock ``Neural codes for image retrieval.''\ {\em Proceedings of the
+  European Conference on Computer Vision (ECCV)},  584--599.
+
+\bibitem[\protect\citeauthoryear{}{Baek et~al.\@}{2019}]{baek2019craft}
+Baek, Y., Lee, B., Han, D., Yun, S., and Lee, H. 2019.
+\newblock ``Character region awareness for text detection.''\ {\em Proceedings
+  of the IEEE/CVF Conference on Computer Vision and Pattern Recognition
+  (CVPR)},  9365--9374.
+
+\bibitem[\protect\citeauthoryear{}{Canny}{1986}]{canny1986edge}
+Canny, J. 1986.
+\newblock ``A computational approach to edge detection.''\ {\em IEEE
+  Transactions on Pattern Analysis and Machine Intelligence}, PAMI-8 (6):
+  679--698, 10.1109/TPAMI.1986.4767851.
+
+\bibitem[\protect\citeauthoryear{}{Cao et~al.\@}{2020}]{cao2020delg}
+Cao, B., Araujo, A., and Sim, J. 2020.
+\newblock ``Unifying deep local and global features for image search.''\ {\em
+  Proceedings of the European Conference on Computer Vision (ECCV)},  726--743.
+
+\bibitem[\protect\citeauthoryear{}{Chandrasekhar
+  et~al.\@}{2011}]{chandrasekhar2011smvs}
+Chandrasekhar, V.~R., Chen, D.~M., Tsai, S.~S., Cheung, N.-M., Chen, H.,
+  Takacs, G., Reznik, Y., Vedantham, R., Grzeszczuk, R., Bach, J., and Girod,
+  B. 2011.
+\newblock ``The {S}tanford mobile visual search data set.''\ {\em Proceedings
+  of the ACM Conference on Multimedia Systems (MMSys)},  117--122,
+  10.1145/1943552.1943568.
+
+\bibitem[\protect\citeauthoryear{}{Deng et~al.\@}{2009}]{deng2009imagenet}
+Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L. 2009.
+\newblock ``{ImageNet}: A large-scale hierarchical image database.''\ {\em
+  Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR)},  248--255, 10.1109/CVPR.2009.5206848.
+
+\bibitem[\protect\citeauthoryear{}{Dosovitskiy
+  et~al.\@}{2021}]{dosovitskiy2021vit}
+Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X.,
+  Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S.,
+  Uszkoreit, J., and Houlsby, N. 2021.
+\newblock ``An image is worth 16x16 words: Transformers for image recognition
+  at scale.''\ {\em International Conference on Learning Representations
+  (ICLR)}.
+
+\bibitem[\protect\citeauthoryear{}{Douglas and
+  Peucker}{1973}]{douglas1973peucker}
+Douglas, D.~H. and Peucker, T.~K. 1973.
+\newblock ``Algorithms for the reduction of the number of points required to
+  represent a digitized line or its caricature.''\ {\em The Canadian
+  Cartographer}, 10 (2): 112--122.
+
+\bibitem[\protect\citeauthoryear{}{Efron}{1979}]{efron1979bootstrap}
+Efron, B. 1979.
+\newblock ``Bootstrap methods: Another look at the jackknife.''\ {\em The
+  Annals of Statistics}, 7 (1): 1--26.
+
+\bibitem[\protect\citeauthoryear{}{Fischler and
+  Bolles}{1981}]{fischler1981ransac}
+Fischler, M.~A. and Bolles, R.~C. 1981.
+\newblock ``Random sample consensus: A paradigm for model fitting with
+  applications to image analysis and automated cartography.''\ {\em
+  Communications of the ACM}, 24 (6): 381--395, 10.1145/358669.358692.
+
+\bibitem[\protect\citeauthoryear{}{Gordo
+  et~al.\@}{2016}]{gordo2016deepretrieval}
+Gordo, A., Almaz{\'a}n, J., Revaud, J., and Larlus, D. 2016.
+\newblock ``Deep image retrieval: Learning global representations for image
+  search.''\ {\em Proceedings of the European Conference on Computer Vision
+  (ECCV)},  241--257.
+
+\bibitem[\protect\citeauthoryear{}{He et~al.\@}{2016}]{he2016resnet}
+He, K., Zhang, X., Ren, S., and Sun, J. 2016.
+\newblock ``Deep residual learning for image recognition.''\ {\em Proceedings
+  of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  770--778, 10.1109/CVPR.2016.90.
+
+\bibitem[\protect\citeauthoryear{}{Lowe}{2004}]{lowe2004sift}
+Lowe, D.~G. 2004.
+\newblock ``Distinctive image features from scale-invariant keypoints.''\ {\em
+  International Journal of Computer Vision}, 60 (2): 91--110,
+  10.1023/B:VISI.0000029664.99615.94.
+
+\bibitem[\protect\citeauthoryear{}{Nist{\'e}r and
+  Stew{\'e}nius}{2006}]{nister2006vocabtree}
+Nist{\'e}r, D. and Stew{\'e}nius, H. 2006.
+\newblock ``Scalable recognition with a vocabulary tree.''\ {\em Proceedings of
+  the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  Vol.~2,  2161--2168, 10.1109/CVPR.2006.264.
+
+\bibitem[\protect\citeauthoryear{}{Paszke et~al.\@}{2019}]{paszke2019pytorch}
+Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., et~al.\@
+  2019.
+\newblock ``{PyTorch}: An imperative style, high-performance deep learning
+  library.''\ {\em Advances in Neural Information Processing Systems
+  (NeurIPS)}, Vol.~32,  8024--8035.
+
+\bibitem[\protect\citeauthoryear{}{Philbin et~al.\@}{2007}]{philbin2007spatial}
+Philbin, J., Chum, O., Isard, M., Sivic, J., and Zisserman, A. 2007.
+\newblock ``Object retrieval with large vocabularies and fast spatial
+  matching.''\ {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, 10.1109/CVPR.2007.383172.
+
+\bibitem[\protect\citeauthoryear{}{Radenovi{\'c}
+  et~al.\@}{2018}]{radenovic2018revisiting}
+Radenovi{\'c}, F., Iscen, A., Tolias, G., Avrithis, Y., and Chum, O. 2018.
+\newblock ``Revisiting {O}xford and {P}aris: Large-scale image retrieval
+  benchmarking.''\ {\em Proceedings of the IEEE Conference on Computer Vision
+  and Pattern Recognition (CVPR)},  5706--5715.
+
+\bibitem[\protect\citeauthoryear{}{Radenovi{\'c}
+  et~al.\@}{2019}]{radenovic2019finetuning}
+Radenovi{\'c}, F., Tolias, G., and Chum, O. 2019.
+\newblock ``Fine-tuning {CNN} image retrieval with no human annotation.''\ {\em
+  IEEE Transactions on Pattern Analysis and Machine Intelligence}, 41 (7):
+  1655--1668.
+
+\bibitem[\protect\citeauthoryear{}{Radford et~al.\@}{2021}]{radford2021clip}
+Radford, A., Kim, J.~W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry,
+  G., Askell, A., Mishkin, P., Clark, J., Krueger, G., and Sutskever, I. 2021.
+\newblock ``Learning transferable visual models from natural language
+  supervision.''\ {\em Proceedings of the 38th International Conference on
+  Machine Learning (ICML)}, Vol. 139 of {\em Proceedings of Machine Learning
+  Research},  8748--8763.
+
+\bibitem[\protect\citeauthoryear{}{Razavian
+  et~al.\@}{2014}]{razavian2014cnnfeatures}
+Razavian, A.~S., Azizpour, H., Sullivan, J., and Carlsson, S. 2014.
+\newblock ``{CNN} features off-the-shelf: An astounding baseline for
+  recognition.''\ {\em Proceedings of the IEEE Conference on Computer Vision
+  and Pattern Recognition Workshops (CVPRW)},  806--813.
+
+\bibitem[\protect\citeauthoryear{}{Rublee et~al.\@}{2011}]{rublee2011orb}
+Rublee, E., Rabaud, V., Konolige, K., and Bradski, G. 2011.
+\newblock ``{ORB}: An efficient alternative to {SIFT} or {SURF}.''\ {\em
+  Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  2564--2571, 10.1109/ICCV.2011.6126544.
+
+\bibitem[\protect\citeauthoryear{}{Sivic and
+  Zisserman}{2003}]{sivic2003videogoogle}
+Sivic, J. and Zisserman, A. 2003.
+\newblock ``Video {G}oogle: A text retrieval approach to object matching in
+  videos.''\ {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)},  1470--1477, 10.1109/ICCV.2003.1238663.
+
+\bibitem[\protect\citeauthoryear{}{Spearman}{1904}]{spearman1904}
+Spearman, C. 1904.
+\newblock ``The proof and measurement of association between two things.''\
+  {\em The American Journal of Psychology}, 15 (1): 72--101.
+
+\bibitem[\protect\citeauthoryear{}{Suzuki and Abe}{1985}]{suzuki1985contours}
+Suzuki, S. and Abe, K. 1985.
+\newblock ``Topological structural analysis of digitized binary images by
+  border following.''\ {\em Computer Vision, Graphics, and Image Processing},
+  30 (1): 32--46.
+
+\bibitem[\protect\citeauthoryear{}{Venkatesan
+  et~al.\@}{2000}]{venkatesan2000hashing}
+Venkatesan, R., Koon, S.-M., Jakubowski, M.~H., and Moulin, P. 2000.
+\newblock ``Robust image hashing.''\ {\em Proceedings of the IEEE International
+  Conference on Image Processing (ICIP)}, Vol.~3,  664--666.
+
+\bibitem[\protect\citeauthoryear{}{Wolf et~al.\@}{2020}]{wolf2020transformers}
+Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., et~al.\@
+  2020.
+\newblock ``Transformers: State-of-the-art natural language processing.''\ {\em
+  Proceedings of the Conference on Empirical Methods in Natural Language
+  Processing: System Demonstrations (EMNLP)},  38--45.
+
+\end{thebibliography}

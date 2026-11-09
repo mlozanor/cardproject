@@ -1,0 +1,21 @@
+\begin{table}[htbp]\centering\small
+\caption[Multi-card scenes]{Multi-card synthetic scenes (severity 2): detection precision / recall / F1 (IoU $\geq$ 0.5) and end-to-end top-1 (detected and correctly identified / all cards).}\label{tab:scenes}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Method & Overlap & P & R & F1 & End-to-end top-1\\
+\midrule
+ResNet-50 & 0\% & 0.911 & 0.706 & 0.795 & 0.349 {\scriptsize[0.30, 0.40]}\\
+ResNet-50 & 15\% & 0.759 & 0.330 & 0.460 & 0.168 {\scriptsize[0.13, 0.20]}\\
+ResNet-50 & 30\% & 0.721 & 0.291 & 0.415 & 0.154 {\scriptsize[0.12, 0.19]}\\
+CLIP ViT-B/32 & 0\% & 0.911 & 0.706 & 0.795 & 0.571 {\scriptsize[0.52, 0.62]}\\
+CLIP ViT-B/32 & 15\% & 0.759 & 0.330 & 0.460 & 0.267 {\scriptsize[0.22, 0.31]}\\
+CLIP ViT-B/32 & 30\% & 0.721 & 0.291 & 0.415 & 0.220 {\scriptsize[0.18, 0.26]}\\
+Hybrid ResNet$\to$SIFT & 0\% & 0.911 & 0.706 & 0.795 & 0.574 {\scriptsize[0.53, 0.63]}\\
+Hybrid ResNet$\to$SIFT & 15\% & 0.759 & 0.330 & 0.460 & 0.275 {\scriptsize[0.23, 0.32]}\\
+Hybrid ResNet$\to$SIFT & 30\% & 0.721 & 0.291 & 0.415 & 0.240 {\scriptsize[0.20, 0.28]}\\
+Hybrid CLIP$\to$SIFT & 0\% & 0.911 & 0.706 & 0.795 & 0.643 {\scriptsize[0.59, 0.69]}\\
+Hybrid CLIP$\to$SIFT & 15\% & 0.759 & 0.330 & 0.460 & 0.285 {\scriptsize[0.24, 0.33]}\\
+Hybrid CLIP$\to$SIFT & 30\% & 0.721 & 0.291 & 0.415 & 0.247 {\scriptsize[0.21, 0.29]}\\
+\bottomrule
+\end{tabular}
+\end{table}

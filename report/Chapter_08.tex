@@ -1,0 +1,39 @@
+\chapter{Conclusions, Limitations and Future Work}
+\label{ch:conclusions}
+
+%-------------------------------------------------------
+
+\section{Conclusions}
+
+This project built and evaluated a complete pipeline for identifying Pok\'emon trading cards in photos: a classical detector and rectifier, a reference database of \res{db-cards} English cards with reprints grouped by artwork, seven interchangeable retrieval methods with two variants, a synthetic benchmark with exact ground truth, two extensions (printed language and a visual condition estimate), and a working application that also recognises the \res{db-ja-cards} Japanese cards of \emph{Battle Partners}. The experiments support the following conclusions.
+\begin{enumerate}
+  \item \textbf{Local features with geometric verification are the most accurate.} At every severity the most accurate method was exhaustive ORB or SIFT with RANSAC, and the two were statistically tied with each other (severity 3: \res{orb-s3-top1} and \res{sift-s3-top1}; severity 4: \res{orb-s4-top1} and \res{sift-s4-top1}), and at mild distortion their only errors were reprints with identical artwork, which the lenient metric shows to be correct at the artwork level. Their cost is several seconds per photo, growing with the size of the database.
+  \item \textbf{The CLIP hybrid is the best practical compromise.} Re-ranking a 20-card CLIP shortlist with SIFT raised CLIP from \res{clip-s3-top1} to \res{hybrid_clip_k20-s3-top1} at severity 3, matching exhaustive SIFT (\res{sift-s3-top1}) in a few hundred milliseconds per photo instead of several seconds; with $k=50$ it reached \res{ks-clip-k50-top1}. A ResNet-50 shortlist is much weaker and needs a long list ($k=50$: \res{ks-resnet-k50-top1}).
+  \item \textbf{Of the frozen global embeddings, CLIP is clearly better than ResNet-50} (\res{clip-s3-top1} versus \res{resnet-s3-top1} at severity 3), but neither should be used alone for exact identification: at severities 3 and 4 both were beaten even by a $32\times44$ pixel thumbnail on the synthetic queries (\res{pixel-s3-top1} and \res{pixel-s4-top1}).
+  \item \textbf{Rectification is essential, and detection is the bottleneck.} Without rectification the global methods failed almost completely at severity 3 and even the most robust method, SIFT, fell from \res{sift-s3-top1} to \res{norect-sift-top1}; under strong distortion or with overlapping cards most errors come from not finding the card outline (outline correct for only \res{rect-s5-ok}\% of the photos at severity 5; detection recall \res{sc-o30-recall} with 30\% overlap).
+  \item \textbf{Trying both orientations (+rot) does not pay off}: it removes the upside-down errors but not the total number of errors.
+  \item \textbf{The results transfer to real photos, except for the pixel baseline.} On the \res{app-reid-n} real photos saved in the application, SIFT, ORB, CLIP and the CLIP hybrid identified every card, including two Japanese cards that were recognised as Japanese printings, while the pixel baseline identified only \res{app-pixel-hits}. The visual condition estimate, validated on synthetic damage, does not yet give credible scores on real photos of sleeved cards.
+\end{enumerate}
+
+\section{Limitations}
+
+\begin{itemize}
+  \item \textbf{Mostly synthetic evaluation.} The benchmark uses synthetic photos rendered from the reference scans themselves, which makes the task easier than real photos (Section~\ref{sec:disc-synthetic}). The planned systematic real-photo set was not collected; the real-photo evidence is limited to the \res{app-reid-n} photos saved in the application.
+  \item \textbf{Small and recent database.} \res{db-sets} English sets with \res{db-cards} cards (plus \res{db-ja-cards} Japanese cards in the application); a full collection has tens of thousands of cards, which affects both the accuracy of the global embeddings (more neighbours) and the cost of exhaustive matching.
+  \item \textbf{Frozen embeddings.} ResNet-50 and CLIP were not adapted to cards, and CLIP's centre crop hides the top and bottom of the card.
+  \item \textbf{Rectification ambiguity.} The rectified card can be upside down; the +rot variant removes these errors for the embedding methods but adds others.
+  \item \textbf{Classical detector.} Overlapping cards merge into one contour, strong blur or glare removes the border edge, and sleeves move the detected outline.
+  \item \textbf{Indicative latencies.} Timings were measured on a laptop that was running other jobs at the same time (Appendix~\ref{app:repro}).
+  \item \textbf{Condition estimate.} Validated only on synthetic damage of the front side; on real photos it gave implausibly low scores, the weights are hand-set, and the score is not an official grade.
+\end{itemize}
+
+\section{Future work}
+
+\begin{itemize}
+  \item Collect and label the systematic real-photo set (varied backgrounds, lighting, glare, sleeves, several cards per photo) to confirm the ranking of the methods on real data.
+  \item Separate reprints with a second stage that reads the set code and collector number at high resolution.
+  \item Replace or complement the classical detector with a learned detector or segmentation model, motivated by the localisation failures, overlapping cards and sleeves.
+  \item Fine-tune the global embedding on card images (for example with synthetic augmentations) so that the shortlist of the hybrid can be shorter and faster.
+  \item Make the condition estimate robust to sleeves and reflections, validate it against the true condition of real cards, and add a clean reference for the card back.
+  \item Make the CLIP hybrid the default method of the application, add more Japanese and other non-English sets, and log the OCR language prediction separately from the language chosen by the user.
+\end{itemize}

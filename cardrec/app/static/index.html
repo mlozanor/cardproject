@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardDex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #4f6379; --panel: #ffffff; --blue: #1f5eb5; --tag: #3b9ae8;
+    --text: #2b3a4a; --muted: #9aa5b1; --box: #eef0f2; --track: #e1e4e8; --line: #e6e9ed;
+    --yellow: #fbc02d; --green: #66bb6a; --red: #d9534f;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); font-family: Roboto, "Segoe UI", Arial, sans-serif; color: var(--text); }
+  button { font-family: inherit; cursor: pointer; }
+  .stage { height: 100%; display: flex; gap: 28px; justify-content: center; align-items: stretch; padding: 32px; }
+  .panel { background: var(--panel); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.22);
+           display: flex; flex-direction: column; overflow: hidden; min-height: 0; position: relative; }
+  .list { width: min(560px, 46vw); }
+  .detail { width: min(600px, 50vw); }
+  .detail::before { content: ""; height: 5px; background: var(--blue); flex: none; }
+
+  /* list header */
+  .head { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-bottom: 1px solid var(--line); flex: none; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 19px; }
+  .actions { display: flex; gap: 6px; }
+  .icon-btn { border: 0; background: none; padding: 6px; border-radius: 6px; color: var(--blue); display: grid; place-items: center; }
+  .icon-btn:hover { background: var(--box); }
+  .icon-btn svg { width: 22px; height: 22px; }
+  .searchbar { padding: 10px 22px 0; display: none; flex: none; }
+  .searchbar.show { display: block; }
+  .searchbar input { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; font: inherit; }
+  .summary { padding: 10px 22px; font-size: 13px; color: var(--muted); flex: none; display: flex; justify-content: space-between; }
+  .summary b { color: var(--text); font-weight: 500; }
+  .scroll { overflow-y: auto; flex: 1; min-height: 0; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 4px; padding: 8px 16px 24px; }
+  .item { border: 0; background: none; text-align: center; padding: 14px 6px 12px; border-radius: 8px; position: relative; }
+  .item:hover { background: #f5f7f9; }
+  .item.sel { background: #eaf1fb; }
+  .item img { height: 130px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0,0,0,.18)); }
+  .item .nm { font-weight: 500; font-size: 14px; margin-top: 10px; color: var(--text); }
+  .item .no { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .qty { position: absolute; top: 10px; right: 12px; background: var(--blue); color: #fff; font-size: 11px; font-weight: 500; border-radius: 10px; padding: 2px 7px; }
+  .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 60px 20px; line-height: 1.6; }
+  .banner { background: #fff7e0; color: #7a5b00; font-size: 13px; padding: 8px 22px; display: none; flex: none; }
+  .banner.show { display: block; }
+
+  /* detail */
+  .dbody { padding: 22px 26px 28px; overflow-y: auto; flex: 1; min-height: 0; }
+  .top { display: flex; gap: 20px; align-items: flex-start; position: relative; padding-right: 54px; }
+  .top img.hero { height: 190px; filter: drop-shadow(0 3px 5px rgba(0,0,0,.22)); }
+  .top .no { color: var(--muted); font-size: 13px; }
+  .top h1 { margin: 2px 0 10px; font-size: 28px; font-weight: 700; }
+  .tag { display: inline-block; background: var(--tag); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: .4px; border-radius: 3px; padding: 4px 9px; text-transform: uppercase; }
+  .close { position: absolute; top: 0; right: 0; width: 42px; height: 42px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.22); display: grid; place-items: center; color: var(--text); }
+  .close svg { width: 16px; height: 16px; }
+  .desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 18px 0; }
+  .desc b { color: var(--text); font-weight: 500; }
+  .boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+  .box { background: var(--box); border-radius: 4px; padding: 14px 8px; text-align: center; }
+  .box svg { width: 22px; height: 22px; color: var(--text); opacity: .8; }
+  .box .v { font-weight: 700; font-size: 16px; margin-top: 6px; }
+  .box .l { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  h2 { font-size: 18px; font-weight: 500; margin: 22px 0 12px; }
+  .rows .row { display: grid; grid-template-columns: 130px 1fr; gap: 14px; align-items: center; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--muted); }
+  .rows .row:hover { background: #f5f7f9; }
+  .rows .row.sel { background: #eaf1fb; color: var(--text); }
+  .rows .row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar { position: relative; height: 8px; background: var(--track); border-radius: 4px; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--blue); border-radius: 4px; }
+  .bar span { position: absolute; top: -9px; transform: translateX(-100%); background: #fff; border: 1px solid var(--track); border-radius: 4px; font-size: 11px; color: var(--text); padding: 2px 6px; line-height: 1.2; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { font-size: 11px; font-weight: 500; letter-spacing: .4px; text-transform: uppercase; padding: 5px 10px; border-radius: 3px; color: #fff; }
+  .chip.y { background: var(--yellow); } .chip.g { background: var(--green); } .chip.b { background: var(--tag); }
+  /* card tags (from the database metadata) */
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tg { border: 1px solid var(--line); background: #fff; border-radius: 14px; padding: 4px 10px; font-size: 12px; color: var(--text); }
+  .tg small { color: var(--muted); margin-right: 4px; }
+  button.tg:hover { border-color: var(--blue); color: var(--blue); }
+  .filters { padding: 8px 22px 0; display: flex; gap: 6px; flex-wrap: wrap; flex: none; }
+  .filters select { font-size: 12px; padding: 5px 6px; max-width: 160px; }
+  .filters select.on { border-color: var(--blue); color: var(--blue); }
+  .filters .clear { border: 0; background: none; color: var(--blue); font-size: 12px; }
+  /* condition estimate */
+  .cond { border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-top: 10px; }
+  .condhead { display: flex; gap: 14px; align-items: center; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .condhead b { color: var(--text); }
+  .big { font-size: 34px; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .big small { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .ctab { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+  .ctab th, .ctab td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  .ctab th { color: var(--muted); font-weight: 500; }
+  .cond img { width: 100%; max-width: 260px; border-radius: 4px; border: 1px solid var(--line); }
+  .cond details { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .cond ol, .cond ul { font-size: 12px; padding-left: 18px; margin: 6px 0; }
+  .cond h3 { font-size: 14px; font-weight: 500; margin: 16px 0 4px; }
+  .seg { display: inline-flex; border: 1px solid var(--text); border-radius: 8px; overflow: hidden; margin: 12px 0 4px; }
+  .seg button { border: 0; background: #fff; padding: 6px 16px; font-size: 12px; font-weight: 500; color: var(--muted); }
+  .seg button.on { background: var(--text); color: #fff; }
+  .condsvg { width: 100%; height: auto; display: block; }
+  .condsvg text { font-family: Roboto, "Segoe UI", Arial, sans-serif; fill: var(--text); }
+  .condsvg .ttl { font-size: 23px; font-weight: 700; }
+  .condsvg .hd { font-size: 17px; fill: var(--muted); }
+  .condsvg .lab { font-size: 22px; fill: var(--muted); }
+  .condsvg .val { font-size: 22px; }
+  .condsvg .cen { font-size: 23px; }
+  .condsvg .score { font-size: 46px; font-weight: 700; }
+  .condsvg .card { fill: none; stroke: var(--text); stroke-width: 1.5; }
+  .condsvg .dash { fill: none; stroke: var(--text); stroke-width: 1; stroke-dasharray: 5 5; }
+  .condsvg .br { fill: none; stroke: var(--text); stroke-width: 6; }
+  .condsvg .box { fill: #fff; stroke: var(--text); stroke-width: 3; }
+  .condsvg .dot { fill: var(--muted); }
+  .condsvg .dotn { font-size: 14px; fill: #fff; font-weight: 700; }
+  .condsvg .dlab { font-size: 17px; fill: var(--muted); }
+  .photos { display: flex; gap: 14px; }
+  .photos figure { margin: 0; text-align: center; font-size: 11px; color: var(--muted); }
+  .photos img { height: 130px; border-radius: 4px; border: 1px solid var(--line); display: block; margin-bottom: 4px; }
+  .actionrow { display: flex; gap: 10px; align-items: center; margin-top: 26px; flex-wrap: wrap; }
+  .btn { border: 0; border-radius: 6px; padding: 11px 20px; font-weight: 500; font-size: 14px; }
+  .btn.primary { background: var(--blue); color: #fff; } .btn.primary:hover { background: #184f9a; }
+  .btn.ghost { background: var(--box); color: var(--text); } .btn.ghost:hover { background: #e2e5e8; }
+  .btn.danger { background: #fff; color: var(--red); border: 1px solid #efc4c2; }
+  input.num, textarea { border: 1px solid var(--line); border-radius: 6px; padding: 9px 10px; font: inherit; width: 100%; }
+  .field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .warn { color: #b26a00; } .ok { color: #2e7d32; }
+
+  /* upload */
+  .drop { margin-top: 10px; border: 2px dashed #c9d1da; border-radius: 10px; padding: 48px 24px; text-align: center; color: var(--muted); transition: .15s; cursor: pointer; }
+  .drop.over, .drop:hover { border-color: var(--blue); background: #f3f7fd; color: var(--blue); }
+  .drop svg { width: 46px; height: 46px; color: var(--blue); }
+  .drop p { margin: 10px 0 0; font-size: 14px; line-height: 1.6; }
+  select { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font: inherit; background: #fff; }
+  .spin { width: 34px; height: 34px; border: 4px solid var(--track); border-top-color: var(--blue); border-radius: 50%; animation: s 0.9s linear infinite; margin: 70px auto 16px; }
+  @keyframes s { to { transform: rotate(360deg); } }
+  .center { text-align: center; color: var(--muted); font-size: 14px; }
+  @media (max-width: 900px) { .stage { flex-direction: column; overflow: auto; height: auto; } .list, .detail { width: 100%; min-height: 70vh; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <section class="panel list">
+    <div class="head">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#fff" stroke="#c0392b" stroke-width="2.4"/><path d="M2 14h24" stroke="#2b3a4a" stroke-width="2.4"/><path d="M2.6 12.5a11.6 11.6 0 0 1 22.8 0z" fill="#d9483b"/><circle cx="14" cy="14" r="4" fill="#fff" stroke="#2b3a4a" stroke-width="2.4"/></svg>
+        CardDex
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="btnNew" title="Analyze a new card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="icon-btn" id="btnStats" title="Collection stats"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="4" width="4" height="17" rx="1"/><rect x="17" y="9" width="4" height="12" rx="1"/></svg></button>
+        <button class="icon-btn" id="btnSearch" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+      </div>
+    </div>
+    <div class="banner" id="banner">Preparing the card index (first start only)... analysis will work in a moment.</div>
+    <div class="searchbar" id="searchbar"><input id="q" placeholder="Search by name, set, number, illustrator, any tag..."></div>
+    <div class="filters" id="filters"></div>
+    <div class="summary" id="summary"></div>
+    <div class="scroll"><div class="grid" id="grid"></div></div>
+  </section>
+  <section class="panel detail"><div class="dbody" id="detail"></div></section>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = v => (v === null || v === undefined || v === '') ? '—' : '$' + Number(v).toFixed(2);
+const ICON = {
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>',
+  target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>',
+  stack: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg>',
+  cpu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>',
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>'
+};
+
+let info = {methods: ['sift'], default_method: 'sift', demo: false};
+let method = 'sift';
+let items = [];
+let selectedId = null;
+let analysis = null, selCand = 0;
+const priceCache = {};
+
+/* ---------- tags ---------- */
+// Tags come from the reference database (server: engine.tags). Language belongs to YOUR copy.
+const LANGS = {en: 'English', es: 'Spanish', ja: 'Japanese', '': 'Unknown'};
+const FILTERS = [['set', 'Set'], ['category', 'Category'], ['trainer_subtype', 'Trainer type'],
+                 ['pokemon_type', 'Type'], ['rarity', 'Rarity'], ['regulation_mark', 'Regulation'],
+                 ['language', 'Language'], ['illustrator', 'Illustrator']];
+let filters = {};                       // key -> chosen value
+const tagVal = (it, key) => key === 'language' ? LANGS[it.language || ''] || it.language
+                                               : ((it.tags || []).find(t => t.key === key) || {}).value || '';
+function tagChips(tags, language, clickable) {
+  const all = [...(tags || [])];
+  if (language !== undefined) all.push({key: 'language', label: 'Language', value: LANGS[language || ''] || language});
+  return `<div class="tags">${all.map(t => clickable
+    ? `<button class="tg" data-k="${esc(t.key)}" data-v="${esc(t.value)}" title="Show all cards with this tag"><small>${esc(t.label)}</small>${esc(t.value)}</button>`
+    : `<span class="tg"><small>${esc(t.label)}</small>${esc(t.value)}</span>`).join('')}</div>`;
+}
+function bindTagClicks() {                // clicking a tag filters the collection by it
+  document.querySelectorAll('button.tg').forEach(b => b.onclick = () => {
+    filters = {[b.dataset.k]: b.dataset.v}; renderFilters(); renderGrid();
+  });
+}
+/* ---------- condition estimate (report layout: card diagram + panels, then photos + surface) ---------- */
+const pct = v => (100 * v).toFixed(0) + '%';
+const SUB = {                              // sub-scores shown on a 0-1000 scale: 1000 = no problem found
+  Total: z => z.score, Fray: z => Math.round(1000 * (1 - z.fray)),
+  Fill: z => Math.round(1000 * z.fill), Whitening: z => Math.round(1000 * (1 - z.whitening))};
+let condReport = null, condSide = 'front';
+
+function condPanel(x, y, title, z) {        // one corner/edge: FRONT and BACK columns
+  const row = (label, i) => `<text x="${x}" y="${y + 56 + 26 * i}" class="lab">${label}</text>` +
+    ['front', 'back'].map((s, j) => `<text x="${x + 128 + 70 * j}" y="${y + 56 + 26 * i}" class="val">${
+      z[s] ? SUB[label](z[s]) : '—'}</text>`).join('');
+  return `<text x="${x}" y="${y}" class="ttl">${title}</text>
+    <text x="${x + 128}" y="${y + 28}" class="hd">FRONT</text><text x="${x + 198}" y="${y + 28}" class="hd">BACK</text>
+    ${Object.keys(SUB).map(row).join('')}`;
+}
+function condSvg(c, side) {
+  // drawing units: viewBox 1100 x 840, card 340 x 475 (63 x 88 mm) in the middle, panels around it
+  const r = c.sides[side], X = 380, Y = 190, Wd = 340, Ht = 475, cx = X + Wd / 2, cy = Y + Ht / 2;
+  const bracket = (px, py, dx, dy) => `<path d="M${px + dx * 44} ${py} H${px} V${py + dy * 44}" class="br"/>`;
+  let inner = '', cen = '', marks = '';
+  if (r) {
+    const s = Wd / 750, b = r.centering.border_px;      // border widths in px of the 750 x 1050 warp
+    const x0 = X + b.left * s, x1 = X + Wd - b.right * s, y0 = Y + b.top * s, y1 = Y + Ht - b.bottom * s;
+    inner = `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" class="dash"/>` +
+      [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].map(([px, py]) => `<line x1="${px}" y1="${py}" x2="${cx}" y2="${cy}" class="dash"/>`).join('');
+    const lp = r.centering.left_pct, tp = r.centering.top_pct;
+    cen = `<text x="${cx}" y="${y0 + 28}" class="cen" text-anchor="middle">C ${tp.toFixed(1)}</text>
+      <text x="${cx}" y="${y1 - 12}" class="cen" text-anchor="middle">C ${(100 - tp).toFixed(1)}</text>
+      <text transform="translate(${x0 + 26} ${cy - 70}) rotate(-90)" class="cen" text-anchor="middle">C ${lp.toFixed(1)}</text>
+      <text transform="translate(${x1 - 12} ${cy - 70}) rotate(-90)" class="cen" text-anchor="middle">C ${(100 - lp).toFixed(1)}</text>`;
+    marks = r.surface.defects.map((d, i) => { const px = X + d.x * Wd, py = Y + d.y * Ht;
+      return `<circle cx="${px}" cy="${py}" r="13" class="dot"/><text x="${px}" y="${py + 5}" class="dotn" text-anchor="middle">${i + 1}</text>
+        <text x="${px}" y="${py + 32}" class="dlab" text-anchor="middle">${esc(d.type.split(' ')[0].toUpperCase())}</text>`; }).join('');
+  }
+  const Z = c.zones;
+  return `<svg viewBox="0 0 1100 850" class="condsvg" role="img" aria-label="Card condition diagram">
+    <rect x="${X}" y="${Y}" width="${Wd}" height="${Ht}" class="card"/>
+    <line x1="${cx}" y1="${Y - 30}" x2="${cx}" y2="${Y + Ht + 30}" class="dash"/>
+    <line x1="${X - 50}" y1="${cy}" x2="${X + Wd + 50}" y2="${cy}" class="dash"/>
+    ${inner}
+    ${bracket(X - 8, Y - 8, 1, 1)}${bracket(X + Wd + 8, Y - 8, -1, 1)}${bracket(X + Wd + 8, Y + Ht + 8, -1, -1)}${bracket(X - 8, Y + Ht + 8, 1, -1)}
+    ${cen}${marks}
+    <rect x="${cx - 62}" y="${cy - 36}" width="124" height="72" rx="12" class="box"/>
+    <text x="${cx}" y="${cy + 16}" class="score" text-anchor="middle">${c.overall}</text>
+    ${r ? '' : `<text x="${cx}" y="${cy + 70}" class="lab" text-anchor="middle">no ${side} photo</text>`}
+    ${condPanel(15, 60, 'TOP LEFT', Z.corners.top_left)}${condPanel(838, 60, 'TOP RIGHT', Z.corners.top_right)}
+    ${condPanel(15, 360, 'LEFT EDGE', Z.edges.left)}${condPanel(838, 360, 'RIGHT EDGE', Z.edges.right)}
+    ${condPanel(15, 660, 'BOTTOM LEFT', Z.corners.bottom_left)}${condPanel(838, 660, 'BOTTOM RIGHT', Z.corners.bottom_right)}
+    ${condPanel(435, 26, 'TOP EDGE', Z.edges.top)}${condPanel(435, 700, 'BOTTOM EDGE', Z.edges.bottom)}
+  </svg>`;
+}
+function renderCondDiagram() {
+  $('#condSvg').innerHTML = condSvg(condReport, condSide);
+  document.querySelectorAll('.seg button').forEach(b => b.classList.toggle('on', b.dataset.side === condSide));
+}
+function surfaceHTML(side, r) {
+  if (!r) return '';
+  const d = r.surface.defects;
+  return `<h3>${side === 'front' ? 'Front' : 'Back'} surface: ${r.surface.score === null ? 'not assessed' : r.surface.score + ' / 1000'}</h3>
+    ${d.length ? `<table class="ctab"><tr><th>#</th><th>Type</th><th>Position (across, down)</th><th>Size (% of card)</th><th>Strength</th></tr>
+      ${d.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.type)}</td><td>${pct(x.x)}, ${pct(x.y)}</td>
+        <td>${pct(x.w)} × ${pct(x.h)}</td><td>${x.strength.toFixed(2)}</td></tr>`).join('')}</table>`
+      : (r.surface.score === null ? '' : '<p class="note">No surface defects found.</p>')}
+    ${r.surface.warnings.map(w => `<p class="note warn">${esc(w)}</p>`).join('')}
+    <p class="note">Sub-totals: ${Object.entries(r.subtotals).map(([k, v]) => `${k} ${v}`).join(' · ')}</p>`;
+}
+function conditionHTML(c) {
+  if (!c || !c.zones) return '';
+  condReport = c; condSide = c.sides.front ? 'front' : 'back';
+  setTimeout(renderCondDiagram, 0);           // the diagram is drawn once the container exists
+  const ph = c.photos || {};
+  return `<div class="cond">
+    <div class="condhead"><div><b>${esc(c.label)}</b><br>Overall ${c.overall} / 1000 (${esc(c.overall_rule)}).
+      Sub-scores: 1000 = nothing found; Fray / Whitening = 1000 × (1 − share of the zone affected), Fill = 1000 × share present.</div></div>
+    <div class="seg"><button data-side="front" onclick="condSide='front';renderCondDiagram()">FRONT</button><button data-side="back" onclick="condSide='back';renderCondDiagram()">BACK</button></div>
+    <div id="condSvg"></div>
+    <p class="note">C = centering: share of the border on that side (50.0 = perfect). Card size (W × H) cannot be measured from a photo.</p>
+    <div class="photos" style="margin-top:10px">${['front', 'back'].filter(s => ph[s]).map(s =>
+      `<figure><img src="${ph[s]}" style="height:240px"><figcaption>${s} (straightened)</figcaption></figure>`).join('')}</div>
+    ${surfaceHTML('front', c.sides.front)}${surfaceHTML('back', c.sides.back)}
+    ${(c.problems || []).map(p => `<p class="note warn">${esc(p)}</p>`).join('')}
+    <details><summary>What a photo cannot measure</summary><ul>${c.limits.map(l => `<li>${esc(l)}</li>`).join('')}</ul></details>
+  </div>`;
+}
+async function estimateCondition() {
+  const a = analysis, c = a.candidates[selCand];
+  const fd = new FormData();
+  fd.append('card_id', c.id);
+  if ($('#condFront').files[0]) fd.append('front', $('#condFront').files[0]); else fd.append('front_upload_id', a.upload_id);
+  if ($('#condBack').files[0]) fd.append('back', $('#condBack').files[0]);
+  $('#condBox').innerHTML = '<p class="note">Estimating condition…</p>';
+  try {
+    a.condition = await api('/api/condition', {method: 'POST', body: fd});
+    $('#condBox').innerHTML = conditionHTML(a.condition);
+  } catch (e) { $('#condBox').innerHTML = `<p class="note warn">${esc(e.message)}</p>`; }
+}
+
+function renderFilters() {
+  $('#filters').innerHTML = FILTERS.map(([k, label]) => {
+    const vals = [...new Set(items.map(i => tagVal(i, k)).filter(Boolean))].sort();
+    if (!vals.length) return '';
+    return `<select data-k="${k}" class="${filters[k] ? 'on' : ''}"><option value="">${label}: all</option>${
+      vals.map(v => `<option ${filters[k] === v ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>`;
+  }).join('') + (Object.keys(filters).length ? '<button class="clear" id="clearF">clear filters</button>' : '');
+  document.querySelectorAll('#filters select').forEach(s => s.onchange = () => {
+    if (s.value) filters[s.dataset.k] = s.value; else delete filters[s.dataset.k];
+    renderFilters(); renderGrid();
+  });
+  if ($('#clearF')) $('#clearF').onclick = () => { filters = {}; renderFilters(); renderGrid(); };
+}
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+/* ---------- collection list ---------- */
+async function loadCollection() {
+  const d = await api('/api/collection');
+  items = d.items;
+  const s = d.summary;
+  $('#summary').innerHTML = `<span><b>${s.unique}</b> unique · <b>${s.total_cards}</b> cards</span><span>Est. value <b>${money(s.total_value)}</b></span>`;
+  renderFilters();
+  renderGrid();
+}
+function renderGrid() {
+  const q = ($('#q').value || '').toLowerCase().trim();
+  const text = i => [i.name, i.set_name, i.number, i.notes, LANGS[i.language || ''], ...(i.tags || []).map(t => t.value)].join(' ').toLowerCase();
+  const list = items.filter(i => (!q || text(i).includes(q))
+                              && Object.entries(filters).every(([k, v]) => tagVal(i, k) === v));
+  if (!list.length) {
+    $('#grid').innerHTML = `<div class="empty">${items.length ? 'No cards match your search or filters.' : 'Your collection is empty.<br>Use <b>+</b> to analyze a card photo and save it here.'}</div>`;
+    return;
+  }
+  $('#grid').innerHTML = list.map(i => `
+    <button class="item ${i.id === selectedId ? 'sel' : ''}" data-id="${i.id}">
+      ${i.quantity > 1 ? `<span class="qty">×${i.quantity}</span>` : ''}
+      <img src="${i.image_url}" alt="">
+      <div class="nm">${esc(i.name)}</div>
+      <div class="no">#${esc(i.number)}</div>
+    </button>`).join('');
+  document.querySelectorAll('.item').forEach(b => b.onclick = () => { selectedId = +b.dataset.id; renderGrid(); viewSaved(items.find(i => i.id === selectedId)); });
+}
+
+/* ---------- detail views ---------- */
+// What each identification method does (speeds measured on this laptop with 785-917 reference cards).
+const METHOD_INFO = {
+  'sift': ['SIFT + RANSAC', 'Finds hundreds of small detail points in your photo and checks which reference card they fit geometrically. Very accurate and works with any rotation, but compares against every card: slow (about 10-25 s).'],
+  'orb': ['ORB + RANSAC', 'Same idea as SIFT with faster, simpler detail points. Usually as accurate on clear photos; a few seconds per photo.'],
+  'resnet': ['ResNet-50', 'An image-recognition network turns the whole card into one "fingerprint" and picks the most similar card. Very fast, but easily confuses cards with similar art (e.g. full-art cards).'],
+  'clip': ['CLIP', 'A newer AI model makes the fingerprint. Very fast (under 0.5 s) and better than ResNet, but it only looks at the centre of the card and can mix up versions.'],
+  'hybrid-clip': ['Hybrid CLIP + SIFT', 'CLIP picks the 20 most likely cards, then SIFT checks only those 20. Close to SIFT accuracy in under a second.'],
+  'hybrid-resnet': ['Hybrid ResNet + SIFT', 'Like the CLIP hybrid, but ResNet picks the 20 candidates. Fast; if the right card is not among the 20, it cannot be found.'],
+  'hybrid-clip+rot': ['Hybrid CLIP + SIFT, any rotation', 'The CLIP hybrid that also tries the photo upside down, so cards photographed rotated or upside down are still found. Recommended.'],
+  'hybrid-clip@art+rot': ['Hybrid CLIP + SIFT, artwork only', 'Compares only the illustration, not the text, so Spanish and Japanese prints match their English card too. Use it for non-English cards.'],
+};
+const methodNote = m => METHOD_INFO[m] ? `<b>${esc(METHOD_INFO[m][0])}:</b> ${esc(METHOD_INFO[m][1])}` : '';
+
+function viewWelcome() {
+  analysis = null; selectedId = null; renderGrid();
+  $('#detail').innerHTML = `
+    <h2 style="margin-top:4px">Analyze a card</h2>
+    <p class="desc">Upload a photo of a Pokémon card. CardDex finds the card, matches it against the reference database, and lets you save it to your collection with its average price.</p>
+    <div class="drop" id="drop">${ICON.up}<p><b>Drop a photo here</b> or click to choose a file<br><span style="font-size:12px">JPG / PNG · one card per photo for now</span></p></div>
+    <input type="file" id="file" accept="image/*" hidden>
+    <div class="actionrow"><label class="field" style="flex-direction:row;align-items:center;gap:10px">Method
+      <select id="method">${info.methods.map(m => `<option value="${m}" ${m === method ? 'selected' : ''}>${m}</option>`).join('')}</select></label></div>
+    <p class="note" id="methodNote">${methodNote(method)}</p>
+    <details class="note"><summary style="cursor:pointer">What do the methods mean?</summary>
+      <ul style="margin:6px 0 0;padding-left:18px;line-height:1.5">${info.methods.filter(m => METHOD_INFO[m]).map(m =>
+        `<li><b>${esc(m)}</b> (${esc(METHOD_INFO[m][0])}): ${esc(METHOD_INFO[m][1])}</li>`).join('')}</ul></details>
+    <p class="note">${info.demo ? 'Demo mode: fake cards, no price data. Try the sample photos in <code>data/demo/samples</code>.' : `Reference database: ${info.n_reference_cards} cards.`}</p>`;
+  $('#method').onchange = e => { method = e.target.value; $('#methodNote').innerHTML = methodNote(method); };
+  const drop = $('#drop'), file = $('#file');
+  drop.onclick = () => file.click();
+  file.onchange = () => file.files[0] && analyze(file.files[0]);
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+  drop.ondragleave = () => drop.classList.remove('over');
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); e.dataTransfer.files[0] && analyze(e.dataTransfer.files[0]); };
+}
+
+function viewBusy(msg) {
+  $('#detail').innerHTML = `<div class="spin"></div><div class="center">${esc(msg)}</div>`;
+}
+
+async function analyze(file) {
+  viewBusy('Analyzing your card...');
+  const fd = new FormData();
+  fd.append('image', file); fd.append('method', method);
+  try {
+    analysis = await api('/api/analyze', {method: 'POST', body: fd});
+    selCand = 0;
+    viewResult();
+  } catch (e) {
+    $('#detail').innerHTML = `<div class="center" style="margin-top:60px"><p class="warn">${esc(e.message)}</p><button class="btn ghost" onclick="viewWelcome()">Try again</button></div>`;
+  }
+}
+
+function priceBoxHTML(cardId) {
+  const p = priceCache[cardId];
+  if (p === undefined) return ['…', 'loading price'];
+  if (!p.available) return ['—', 'price unavailable'];
+  return [(p.currency === 'EUR' ? '€' : '$') + Number(p.price).toFixed(2), 'avg. price'];
+}
+async function loadPrice(cardId) {
+  if (priceCache[cardId] !== undefined) return;
+  try { priceCache[cardId] = await api('/api/price/' + encodeURIComponent(cardId)); }
+  catch (e) { priceCache[cardId] = {available: false}; }
+  if (analysis && analysis.candidates[selCand] && analysis.candidates[selCand].id === cardId) updatePriceBox();
+}
+function updatePriceBox() {
+  const el = $('#priceBox'); if (!el) return;
+  const [v, l] = priceBoxHTML(analysis.candidates[selCand].id);
+  el.querySelector('.v').textContent = v; el.querySelector('.l').textContent = l;
+}
+
+function viewResult() {
+  const a = analysis, c = a.candidates[selCand];
+  const max = Math.max(...a.candidates.map(x => x.score), 1);
+  const fmt = v => a.score_kind === 'similarity' ? v.toFixed(0) + '%' : v;
+  const kindLabel = a.score_kind === 'similarity' ? 'similarity' : 'inliers';
+  let verdict;
+  if (a.confident === true) verdict = '<span class="ok"><b>Likely match.</b></span>';
+  else if (a.confident === false) verdict = '<span class="warn"><b>Low confidence</b> — please check the other candidates.</span>';
+  else verdict = '<b>Best match.</b>';
+  const [pv, pl] = priceBoxHTML(c.id);
+  $('#detail').innerHTML = `
+    <div class="top">
+      <img class="hero" src="${c.image_url}" alt="">
+      <div><div class="no">#${esc(c.number)}</div><h1>${esc(c.name)}</h1><span class="tag">${esc(c.set_name)}</span></div>
+      <button class="close" onclick="viewWelcome()" title="Close">${ICON.x}</button>
+    </div>
+    <p class="desc">${verdict} ${a.found ? '' : '<span class="warn">The card outline was not found, so the whole photo was used.</span> '}Pick another candidate below if this isn't the right card, then save it to your collection.</p>
+    <div class="boxes">
+      <div class="box" id="priceBox">${ICON.tag}<div class="v">${pv}</div><div class="l">${pl}</div></div>
+      <div class="box">${ICON.target}<div class="v">${fmt(c.score)}</div><div class="l">${kindLabel}</div></div>
+      <div class="box">${ICON.cpu}<div class="v">${esc(a.method)}</div><div class="l">${a.ms} ms</div></div>
+    </div>
+    <h2>Your photo</h2>
+    <div class="photos"><figure><img src="${a.upload_url}"><figcaption>uploaded</figcaption></figure><figure><img src="${a.rect_url}"><figcaption>detected &amp; straightened</figcaption></figure></div>
+    <h2>Top matches</h2>
+    <div class="rows">${a.candidates.map((x, i) => `
+      <div class="row ${i === selCand ? 'sel' : ''}" data-i="${i}">
+        <div class="nm" title="${esc(x.name)} · ${esc(x.set_name)}">${esc(x.name)} <span style="opacity:.6">#${esc(x.number)}</span></div>
+        <div class="bar"><i style="width:${Math.max(4, 100 * x.score / max)}%"></i><span style="left:${Math.max(8, 100 * x.score / max)}%">${fmt(x.score)}</span></div>
+      </div>`).join('')}</div>
+    <h2>Tags</h2>
+    ${tagChips(c.tags)}
+    ${a.language ? `<p class="note">Printed language detected from the text: <b>${esc(LANGS[a.language.code] || 'not sure')}</b> (${esc(a.language.rule || 'no evidence')}). Change it below if it is wrong.</p>` : ''}
+    <h2>Condition <span style="font-size:13px;color:var(--muted);font-weight:400">visual estimate, not an official grade</span></h2>
+    <p class="note">Take two photos, one of the <b>front</b> and one of the <b>back</b>: card flat on a plain, contrasting
+      background, no glare, filling most of the photo.</p>
+    <div class="fields">
+      <label class="field">Front photo<input type="file" id="condFront" accept="image/*">
+        <span>Leave empty to use the photo analyzed above.</span></label>
+      <label class="field">Back photo<input type="file" id="condBack" accept="image/*"></label>
+    </div>
+    <div class="actionrow" style="margin-top:12px"><button class="btn ghost" onclick="estimateCondition()">Estimate condition</button></div>
+    <div id="condBox">${conditionHTML(a.condition)}</div>
+    <div class="actionrow">
+      <label class="field" style="width:90px">Quantity<input class="num" id="qtyNew" type="number" min="1" value="1"></label>
+      <label class="field" style="width:150px">Language of your copy<select id="langNew">${
+        Object.entries(LANGS).map(([k, v]) => `<option value="${k}" ${k === ((a.language && a.language.code) || c.language || 'en') ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      <button class="btn primary" id="btnSave" style="margin-top:16px">Save to collection</button>
+      <button class="btn ghost" style="margin-top:16px" onclick="viewWelcome()">Discard</button>
+    </div>`;
+  document.querySelectorAll('.rows .row').forEach(r => r.onclick = () => { selCand = +r.dataset.i; viewResult(); });
+  $('#btnSave').onclick = saveCurrent;
+  loadPrice(c.id);
+}
+
+async function saveCurrent() {
+  const a = analysis, c = a.candidates[selCand];
+  const p = priceCache[c.id];
+  const body = {card_id: c.id, upload_id: a.upload_id, method: a.method, score: c.score, quantity: +$('#qtyNew').value || 1,
+                language: $('#langNew').value, condition: a.condition || null};
+  if (p && p.available) { body.price = p.price; body.price_source = p.source; }
+  try {
+    const r = await api('/api/save', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+    await loadCollection(); selectedId = r.id; renderGrid();
+    viewSaved(items.find(i => i.id === r.id));
+  } catch (e) { alert(e.message); }
+}
+
+function viewSaved(it) {
+  if (!it) return viewWelcome();
+  $('#detail').innerHTML = `
+    <div class="top">
+      <img class="hero" src="${it.image_url}" alt="">
+      <div><div class="no">#${esc(it.number)}</div><h1>${esc(it.name)}</h1><span class="tag">${esc(it.set_name)}</span></div>
+      <button class="close" onclick="viewWelcome()" title="Close">${ICON.x}</button>
+    </div>
+    <p class="desc">Saved on ${esc((it.added_at || '').slice(0, 10))}${it.method ? ` · identified with <b>${esc(it.method)}</b>` : ''}.</p>
+    <div class="boxes">
+      <div class="box">${ICON.tag}<div class="v">${money(it.price)}</div><div class="l">avg. price each</div></div>
+      <div class="box">${ICON.stack}<div class="v">×${it.quantity}</div><div class="l">in collection</div></div>
+      <div class="box">${ICON.target}<div class="v">${money((it.price || 0) * it.quantity)}</div><div class="l">total value</div></div>
+    </div>
+    <h2>Tags</h2>
+    ${tagChips(it.tags, it.language, true)}
+    <p class="note">Click a tag to see all your cards that share it.</p>
+    ${it.condition ? `<h2>Condition <span style="font-size:13px;color:var(--muted);font-weight:400">last visual estimate, not an official grade</span></h2>${conditionHTML(it.condition)}` : ''}
+    <h2>Edit</h2>
+    <div class="fields">
+      <label class="field">Average price (USD)<input class="num" id="fPrice" type="number" step="0.01" min="0" value="${it.price ?? ''}"></label>
+      <label class="field">Quantity<input class="num" id="fQty" type="number" min="1" value="${it.quantity}"></label>
+      <label class="field">Language of your copy<select id="fLang">${
+        Object.entries(LANGS).map(([k, v]) => `<option value="${k}" ${k === (it.language || '') ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+    </div>
+    <p class="note" id="priceNote">${it.price_source ? 'Source: ' + esc(it.price_source) : 'No price yet. Refresh it or type one in.'}${it.price_updated ? ' · updated ' + esc(it.price_updated.slice(0, 10)) : ''}</p>
+    <label class="field" style="margin-top:12px">Notes<textarea id="fNotes" rows="2" placeholder="Condition, where you got it, ...">${esc(it.notes)}</textarea></label>
+    ${it.photo_url ? `<h2>Your photo</h2><div class="photos"><figure><img src="${it.photo_url}"></figure></div>` : ''}
+    <div class="actionrow">
+      <button class="btn primary" id="bSave">Save changes</button>
+      <button class="btn ghost" id="bPrice">Refresh price</button>
+      <button class="btn danger" id="bDel">Remove</button>
+    </div>`;
+  $('#bSave').onclick = async () => {
+    await api('/api/card/' + it.id, {method: 'PATCH', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({price: $('#fPrice').value, quantity: $('#fQty').value, notes: $('#fNotes').value, language: $('#fLang').value,
+                            price_source: $('#fPrice').value == it.price ? it.price_source : 'manual'})});
+    await loadCollection(); viewSaved(items.find(i => i.id === it.id));
+  };
+  bindTagClicks();
+  $('#bPrice').onclick = async () => {
+    $('#priceNote').textContent = 'Fetching price...';
+    try {
+      const p = await api('/api/price/' + encodeURIComponent(it.card_id) + '?refresh=1');
+      if (p.available) { $('#fPrice').value = p.price; $('#priceNote').textContent = 'Fetched: ' + p.source + ' — click Save changes to keep it.'; }
+      else $('#priceNote').textContent = 'Price unavailable' + (p.error ? ' (' + p.error + ')' : '') + '. You can type one in.';
+    } catch (e) { $('#priceNote').textContent = e.message; }
+  };
+  $('#bDel').onclick = async () => {
+    if (!confirm('Remove this card from your collection?')) return;
+    await api('/api/card/' + it.id, {method: 'DELETE'});
+    selectedId = null; await loadCollection(); viewWelcome();
+  };
+}
+
+/* ---------- header buttons & startup ---------- */
+$('#btnNew').onclick = viewWelcome;
+$('#btnSearch').onclick = () => { $('#searchbar').classList.toggle('show'); $('#q').focus(); };
+$('#btnStats').onclick = () => { selectedId = null; renderGrid();
+  const s = items; const val = s.reduce((t, i) => t + (i.price || 0) * i.quantity, 0);
+  const top = [...s].sort((a, b) => (b.price || 0) * b.quantity - (a.price || 0) * a.quantity).slice(0, 5);
+  const max = Math.max(...top.map(i => (i.price || 0) * i.quantity), 1);
+  $('#detail').innerHTML = `<h2 style="margin-top:4px">Collection stats</h2>
+    <div class="boxes"><div class="box">${ICON.stack}<div class="v">${s.length}</div><div class="l">unique cards</div></div>
+    <div class="box">${ICON.stack}<div class="v">${s.reduce((t, i) => t + i.quantity, 0)}</div><div class="l">total cards</div></div>
+    <div class="box">${ICON.tag}<div class="v">${money(val)}</div><div class="l">est. value</div></div></div>
+    <h2>Most valuable</h2><div class="rows">${top.length ? top.map(i => `<div class="row" data-id="${i.id}"><div class="nm">${esc(i.name)}</div>
+    <div class="bar"><i style="width:${Math.max(4, 100 * (i.price || 0) * i.quantity / max)}%"></i><span style="left:${Math.max(10, 100 * (i.price || 0) * i.quantity / max)}%">${money((i.price || 0) * i.quantity)}</span></div></div>`).join('') : '<p class="note">Nothing saved yet.</p>'}</div>`;
+  document.querySelectorAll('.rows .row[data-id]').forEach(r => r.onclick = () => { selectedId = +r.dataset.id; renderGrid(); viewSaved(items.find(i => i.id === selectedId)); });
+};
+$('#q').oninput = renderGrid;
+
+async function pollReady() {
+  try { info = await api('/api/info'); } catch (e) { return; }
+  $('#banner').classList.toggle('show', !info.ready);
+  if (!info.ready) setTimeout(pollReady, 2000);
+}
+
+(async () => {
+  try { info = await api('/api/info'); method = info.default_method; } catch (e) {}
+  await loadCollection();
+  viewWelcome();
+  pollReady();
+})();
+</script>
+</body>
+</html>

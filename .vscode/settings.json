@@ -1,0 +1,31 @@
+{
+    // Python: use the project venv (torch, transformers, easyocr) in the editor and in new terminals.
+    "python.defaultInterpreterPath": "C:/Users/MarianaLozano/.venvs/cardproject/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+
+    // LaTeX Workshop: always build the report, never the original template.
+    "latex-workshop.latex.search.rootFiles.include": ["report/main.tex"],
+    "latex-workshop.latex.search.rootFiles.exclude": ["Latex doc/**"],
+
+    // MiKTeX (user install). latexmk is not used: it needs Perl, which is not installed.
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "C:/Users/MarianaLozano/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe",
+            "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"]
+        },
+        {
+            "name": "bibtex",
+            "command": "C:/Users/MarianaLozano/AppData/Local/Programs/MiKTeX/miktex/bin/x64/bibtex.exe",
+            "args": ["%DOCFILE%"]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "pdflatex -> bibtex -> pdflatex x2",
+            "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "first",
+    "latex-workshop.latex.autoBuild.run": "never"
+}

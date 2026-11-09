@@ -1,0 +1,17 @@
+% set up
+\begin{center}
+    {\fontsize{18pt}{0pt} \MakeUppercase{\textbf{acknowledgments}}}
+\vspace*{24pt}
+\end{center}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+%-------------------------------------------------------
+
+This project received no external funding. It relies on the following external data, code and models, which are gratefully acknowledged.
+
+\textbf{Data.} Card lists, metadata and official card images were obtained from the Pok\'emon TCG API (\url{https://pokemontcg.io}). Missing illustrator names, TCGdex card identifiers, Spanish and Japanese card scans and market prices for the demonstration application were obtained from TCGdex (\url{https://tcgdex.net}). Pok\'emon, the card names and the card artwork are trademarks and copyrights of their respective owners (Nintendo, Creatures Inc.\ and GAME FREAK inc.); the card images are used here only for non-commercial academic research. \todo{Check the terms of use of both APIs before any public release of the data or the application.}
+
+\textbf{Code libraries.} OpenCV (SIFT, ORB, Canny, contours, homography estimation with RANSAC, image warping), NumPy, pandas, PyTorch \citep{paszke2019pytorch} and torchvision, Hugging Face Transformers \citep{wolf2020transformers}, EasyOCR (\url{https://github.com/JaidedAI/EasyOCR}), Flask and matplotlib.
+
+\textbf{Pretrained models.} ResNet-50 \citep{he2016resnet} with the ImageNet weights distributed by torchvision (\texttt{IMAGENET1K\_V2}); CLIP ViT-B/32 \citep{radford2021clip} with the OpenAI weights distributed through Hugging Face (\texttt{openai/clip-vit-base-patch32}); the EasyOCR text detector (based on CRAFT \citep{baek2019craft}) and its Japanese, English and Spanish recognition models. None of these models was retrained or fine-tuned in this project.
+
+\todo{If the course policy requires it, state here (or in the contribution statement) which AI assistants were used, and for what (for example code assistance or drafting of this report).}

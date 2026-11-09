@@ -1,0 +1,12 @@
+\begin{table}[htbp]\centering\small
+\caption[Printed-language classification]{Printed-language classification (English / Spanish / Japanese) with OCR + rules. Version 1 rules were fixed before seeing any data; version 2 was tuned on the dev split only. ``Unknown'' = no usable text; ``wrong'' = another language predicted.}\label{tab:language-clf}
+\begin{tabular}{@{}lllrcrr@{}}
+\toprule
+Rules & Split & Res. & $n$ & Accuracy [95\% CI] & Unknown & Wrong\\
+\midrule
+v1 & test & low & 180 & 0.539 {\scriptsize[0.46, 0.61]} & 66 & 17\\
+v2 & dev & phone & 180 & 0.928 {\scriptsize[0.89, 0.96]} & 13 & 0\\
+v2 & test & phone & 180 & 0.911 {\scriptsize[0.87, 0.95]} & 14 & 2\\
+\bottomrule
+\end{tabular}
+\end{table}

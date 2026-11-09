@@ -1,0 +1,95 @@
+\contentsline {chapter}{Abstract}{ii}{section*.1}%
+\contentsline {chapter}{Acknowledgments}{iii}{section*.2}%
+\contentsline {chapter}{Contents}{iv}{section*.3}%
+\contentsline {chapter}{List of Figures}{vii}{section*.5}%
+\contentsline {chapter}{List of Tables}{viii}{section*.7}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Problem statement}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Motivation}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Contributions}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Related Work}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Local features and geometric verification}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Large-scale instance retrieval}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Deep global descriptors}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Detection, rectification and text}{4}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Card recognition}{4}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Technical Approach}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Pipeline overview}{5}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Card localisation}{5}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Rectification}{6}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Retrieval interface}{7}{section.3.4}%
+\contentsline {paragraph}{Keypoint matching with RANSAC.}{7}{paragraph*.10}%
+\contentsline {paragraph}{Global embeddings.}{7}{paragraph*.11}%
+\contentsline {section}{\numberline {3.5}Hybrid re-ranking}{7}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Variants}{7}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Extensions used by the application}{8}{section.3.7}%
+\contentsline {paragraph}{Printed language.}{8}{paragraph*.12}%
+\contentsline {paragraph}{Visual condition estimate.}{8}{paragraph*.13}%
+\contentsline {paragraph}{Application.}{8}{paragraph*.14}%
+\contentsline {chapter}{\numberline {4}Dataset and Experimental Setup}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Reference database}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Reprints and near-duplicates}{11}{section.4.2}%
+\contentsline {paragraph}{Identical artwork (reprints).}{11}{paragraph*.17}%
+\contentsline {paragraph}{Lookalikes.}{12}{paragraph*.18}%
+\contentsline {paragraph}{Metrics that follow from this.}{12}{paragraph*.19}%
+\contentsline {section}{\numberline {4.3}Synthetic test queries}{12}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Cross-language test set}{13}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Condition validation set}{13}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Metrics}{13}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Real photos}{14}{section.4.7}%
+\contentsline {chapter}{\numberline {5}Baseline and Comparison Methods}{15}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Why these methods}{16}{section.5.1}%
+\contentsline {paragraph}{Pixel thumbnail.}{16}{paragraph*.22}%
+\contentsline {paragraph}{ORB and SIFT with RANSAC.}{16}{paragraph*.23}%
+\contentsline {paragraph}{ResNet-50.}{16}{paragraph*.24}%
+\contentsline {paragraph}{CLIP ViT-B/32.}{16}{paragraph*.25}%
+\contentsline {paragraph}{Hybrids.}{16}{paragraph*.26}%
+\contentsline {section}{\numberline {5.2}Experiments}{16}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Results}{18}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Localisation and rectification}{18}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Single-card identification (main comparison)}{19}{section.6.2}%
+\contentsline {paragraph}{Mild distortion (severities 1--2).}{19}{paragraph*.30}%
+\contentsline {paragraph}{Moderate distortion (severity 3).}{20}{paragraph*.31}%
+\contentsline {paragraph}{Strong distortion (severities 4--5).}{20}{paragraph*.32}%
+\contentsline {paragraph}{Trying both orientations (+rot).}{20}{paragraph*.33}%
+\contentsline {paragraph}{ORB versus SIFT.}{20}{paragraph*.34}%
+\contentsline {section}{\numberline {6.3}Shortlist size of the hybrid}{20}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Effect of rectification}{21}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Multi-card scenes}{22}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Identification across printed languages}{23}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Printed-language classification}{24}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Condition estimate}{24}{section.6.8}%
+\contentsline {section}{\numberline {6.9}The application on real photos}{25}{section.6.9}%
+\contentsline {paragraph}{Re-identification.}{25}{paragraph*.45}%
+\contentsline {paragraph}{Detection on real photos.}{28}{paragraph*.47}%
+\contentsline {paragraph}{Condition estimates on real photos.}{29}{paragraph*.48}%
+\contentsline {section}{\numberline {6.10}Real photos (systematic evaluation)}{29}{section.6.10}%
+\contentsline {chapter}{\numberline {7}Analysis and Discussion}{30}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Failure analysis}{30}{section.7.1}%
+\contentsline {paragraph}{Localisation is the main bottleneck under strong distortion.}{33}{paragraph*.52}%
+\contentsline {paragraph}{Global embeddings also fail on well-rectified cards.}{33}{paragraph*.53}%
+\contentsline {paragraph}{Reprints and lookalikes are rare.}{33}{paragraph*.54}%
+\contentsline {paragraph}{Upside-down cards.}{33}{paragraph*.55}%
+\contentsline {section}{\numberline {7.2}How realistic are the synthetic results?}{33}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Language, text and the global embeddings}{34}{section.7.3}%
+\contentsline {section}{\numberline {7.4}What the application shows about real photos}{34}{section.7.4}%
+\contentsline {paragraph}{Identification transfers to real photos.}{34}{paragraph*.56}%
+\contentsline {paragraph}{Separate Japanese reference cards are needed for exact identification.}{35}{paragraph*.57}%
+\contentsline {paragraph}{Sleeves move the detected outline, not the answer.}{35}{paragraph*.58}%
+\contentsline {paragraph}{Exhaustive SIFT is too slow for the application.}{35}{paragraph*.59}%
+\contentsline {paragraph}{The condition estimate does not transfer to real photos yet.}{35}{paragraph*.60}%
+\contentsline {paragraph}{Stored language.}{35}{paragraph*.61}%
+\contentsline {section}{\numberline {7.5}Printed language and condition}{36}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Conclusions, Limitations and Future Work}{37}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Conclusions}{37}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Limitations}{38}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Future work}{38}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Contribution Statement}{40}{chapter.9}%
+\contentsline {chapter}{References}{41}{chapter*.62}%
+\setcounter {tocdepth}{0}
+\renewcommand {\chapterprefix }{\hspace *{-0.5in}APPENDIX\hspace *{0.6in}}
+\contentsline {chapter}{\numberline {A}Reproducibility and detailed results}{44}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Software and hardware}{44}{appendix.A.1}%
+\contentsline {section}{\numberline {A.2}Commands}{44}{appendix.A.2}%
+\contentsline {section}{\numberline {A.3}Detailed results of the main comparison}{45}{appendix.A.3}%
+\contentsfinish 

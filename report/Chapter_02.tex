@@ -1,0 +1,24 @@
+\chapter{Related Work}
+\label{ch:related}
+
+%-------------------------------------------------------
+
+\section{Local features and geometric verification}
+
+The scale-invariant feature transform (SIFT) of \citet{lowe2004sift} detects keypoints as extrema of a difference-of-Gaussians scale space and describes each one with a 128-dimensional histogram of gradient orientations. Lowe also introduced the \emph{ratio test}, which keeps a match only if the nearest descriptor is clearly closer than the second nearest, and showed that recognising an object from a few verified matches is reliable even under occlusion and clutter. ORB \citep{rublee2011orb} replaces SIFT with an oriented FAST detector and a rotated binary BRIEF descriptor compared with the Hamming distance, which makes it much faster to compute and match. Random sample consensus (RANSAC) \citep{fischler1981ransac} fits a model, here a planar homography, to data with many outliers by repeatedly fitting minimal samples and keeping the model with the largest set of inliers. For flat objects such as cards, the number of RANSAC inliers of a homography is a strong similarity score, because random matches almost never agree on one plane-to-plane mapping.
+
+\section{Large-scale instance retrieval}
+
+Matching a query against every database image is expensive. \citet{sivic2003videogoogle} quantised local descriptors into ``visual words'' and borrowed inverted files and tf-idf weighting from text retrieval; \citet{nister2006vocabtree} scaled this with a hierarchical vocabulary tree and demonstrated it on CD covers, a problem very close to cards. \citet{philbin2007spatial} added \emph{spatial re-ranking}: a fast first stage produces a shortlist, and only the shortlist is verified geometrically. The hybrid method of this project follows the same two-stage idea, with a global embedding instead of a bag of visual words as the first stage. Benchmarks such as the revisited Oxford and Paris datasets \citep{radenovic2018revisiting} remain the standard way to compare instance retrieval methods, and they report mean average precision, which with a single relevant image per query equals the mean reciprocal rank used here.
+
+\section{Deep global descriptors}
+
+Activations of convolutional networks trained for ImageNet classification \citep{deng2009imagenet} turned out to be strong off-the-shelf descriptors for retrieval \citep{razavian2014cnnfeatures, babenko2014neuralcodes}. Later work fine-tuned such networks specifically for retrieval with ranking losses \citep{gordo2016deepretrieval, radenovic2019finetuning}, and DELG \citep{cao2020delg} unified a global descriptor for the first stage with local descriptors for geometric re-ranking in a single network. This project uses \emph{frozen} pretrained models without fine-tuning: a residual network \citep{he2016resnet} and the image encoder of CLIP \citep{radford2021clip}, a vision transformer \citep{dosovitskiy2021vit} trained contrastively on image--text pairs. Using frozen models keeps the comparison simple and avoids the need for labelled photos of every card, but it means that the embeddings were never trained to separate near-identical card versions.
+
+\section{Detection, rectification and text}
+
+Before retrieval, the card must be found and seen from the front. The detector used here is classical: Canny edge detection \citep{canny1986edge}, border following to extract contours \citep{suzuki1985contours}, and polygon simplification \citep{douglas1973peucker} to obtain four corners, followed by a perspective warp. Printed-language recognition uses the EasyOCR toolkit, whose text detector is CRAFT \citep{baek2019craft}. Reprints are grouped with a perceptual hash of the image based on the discrete cosine transform, in the spirit of robust image hashing \citep{venkatesan2000hashing}. The statistical tools are the bootstrap \citep{efron1979bootstrap} for confidence intervals and Spearman's rank correlation \citep{spearman1904} for the condition validation.
+
+\section{Card recognition}
+
+Commercial apps for trading card recognition exist, but their methods are not published. \citet{chandrasekhar2011smvs} released a mobile visual search dataset of phone photos of flat products (such as CD covers, book covers and business cards) matched against clean reference images, which is the most similar published setting found so far. \todo{Search IEEE Xplore, ACM Digital Library and Google Scholar for peer-reviewed work specifically on trading-card (Pok\'emon, Magic: The Gathering, sports cards) recognition, and add it here. Only peer-reviewed sources may be cited.}

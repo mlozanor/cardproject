@@ -1,0 +1,21 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Pipeline overview}}{5}{figure.caption.9}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces The CardDex application}}{10}{figure.caption.15}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Pipeline example}}{18}{figure.caption.27}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Accuracy versus distortion severity}}{19}{figure.caption.29}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Hybrid shortlist size $k$ (5, 10, 20, 50) at severity 3: accuracy versus median latency, compared with each component alone.}}{21}{figure.caption.35}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Language confusion matrices}}{24}{figure.caption.40}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Condition estimate example}}{26}{figure.caption.42}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Photos saved in the application}}{27}{figure.caption.44}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Failure causes per method}}{31}{figure.caption.50}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Failure examples}}{32}{figure.caption.51}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsfinish 

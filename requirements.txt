@@ -1,0 +1,15 @@
+# Core (needed for SIFT/ORB, rectification, synthetic data, evaluation)
+# Pinned to the versions tested on 2026-10-21 (Python 3.12, Windows 11) so results are reproducible.
+opencv-python==5.0.0.93
+numpy==2.5.4
+pandas==3.0.6
+requests==2.34.2
+tqdm==4.70.1
+matplotlib==3.11.2
+flask==3.1.3
+
+# Deep-learning methods (install later, when you reach the CNN/CLIP steps)
+# torch
+# torchvision
+# transformers
+# pillow

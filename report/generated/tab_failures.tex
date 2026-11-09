@@ -1,0 +1,20 @@
+\begin{table}[htbp]\centering\small
+\caption[Failure causes]{Cause of every strict top-1 failure on the synthetic single-card queries (all finished severities pooled; recomputed from the current logs). Each failure gets the first cause that applies, in the column order.}\label{tab:failures}
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Method & \rotatebox{70}{localization} & \rotatebox{70}{rectification} & \rotatebox{70}{upside down} & \rotatebox{70}{same artwork} & \rotatebox{70}{lookalike} & \rotatebox{70}{heavy distortion} & \rotatebox{70}{other} & \rotatebox{70}{total}\\
+\midrule
+Pixel thumbnail {\scriptsize(S1--5)} & 164 & 10 & 43 & 16 & 0 & 53 & 21 & 307\\
+ORB + RANSAC {\scriptsize(S1--5)} & 161 & 7 & 0 & 14 & 0 & 68 & 0 & 250\\
+SIFT + RANSAC {\scriptsize(S1--5)} & 156 & 6 & 0 & 18 & 1 & 60 & 9 & 250\\
+ResNet-50 {\scriptsize(S1--5)} & 162 & 8 & 40 & 10 & 2 & 164 & 160 & 546\\
+CLIP ViT-B/32 {\scriptsize(S1--5)} & 163 & 7 & 40 & 21 & 7 & 136 & 18 & 392\\
+Hybrid ResNet$\to$SIFT {\scriptsize(S1--5)} & 161 & 8 & 31 & 15 & 2 & 117 & 44 & 378\\
+Hybrid CLIP$\to$SIFT {\scriptsize(S1--5)} & 163 & 6 & 38 & 12 & 1 & 84 & 7 & 311\\
+ResNet-50 +rot {\scriptsize(S1--5)} & 162 & 8 & 0 & 9 & 2 & 201 & 175 & 557\\
+CLIP +rot {\scriptsize(S1--5)} & 163 & 7 & 0 & 21 & 5 & 171 & 28 & 395\\
+Hybrid ResNet$\to$SIFT +rot {\scriptsize(S1--5)} & 161 & 8 & 0 & 12 & 3 & 148 & 53 & 385\\
+Hybrid CLIP$\to$SIFT +rot {\scriptsize(S1--5)} & 163 & 6 & 0 & 12 & 1 & 111 & 9 & 302\\
+\bottomrule
+\end{tabular}
+\end{table}
